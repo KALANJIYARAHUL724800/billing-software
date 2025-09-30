@@ -31,7 +31,7 @@
                     <p>Account Close</p>
                 </td>
                 <td>
-                    <a href="#"><i class="bi bi-box-arrow-right"></i></a>
+                    <a href="{{ route('logout') }}"><i class="bi bi-box-arrow-right"></i></a>
                     <p>Logout</p>
                 </td>
             </tr>
