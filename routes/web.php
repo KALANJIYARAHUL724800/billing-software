@@ -17,20 +17,18 @@ Route::get('/billing', function () {
     return view('billing');
 })->name('billing');
 
-Route::get('/products', function () {
-    return view('products');
-});
+Route::get('/products', [ProductController::class,'showAllProducts'])->name('products.page');
 Route::post('/addproducts',[ProductController::class,'addProducts'])->name('products.insert');
 
 Route::get('/productform', function () {
     return view('productform');
-});
+})->name('productform.page');
 
 Route::post('/products-search',[ProductController::class,'searchProduct']);
 
 Route::get('/settings', function () {
     return view('settings');
-});
+})->name('settings.page');
 
 Route::get('/billscreen', function () {
     return view('billscreen');
@@ -38,8 +36,8 @@ Route::get('/billscreen', function () {
 
 Route::get('/listsales', function () {
     return view('listsales');
-});
+})->name('listsales.page');
 
 Route::get('/salsereport', function () {
     return view('salsereport');
-});
+})->name('salesreport.page');

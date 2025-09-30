@@ -1,3 +1,4 @@
+@include('layouts.header')
 <html lang="en">
 
 <head>
@@ -11,6 +12,7 @@
 </head>
 
 <body>
+    @yield('content')
     <div class="container-fluid">
         <div class="text-center">
             <p style="color: red; font-weight: 10px;">Welcome Administrator</p>

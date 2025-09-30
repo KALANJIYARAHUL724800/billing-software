@@ -29,3 +29,8 @@ denominations.forEach(den => {
         updateTotal();
     });
 });
+
+function createProduct()
+{
+     window.location.href = "/productform";
+}

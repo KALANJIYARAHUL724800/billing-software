@@ -1,3 +1,4 @@
+@include('layouts.header')
 <html lang="en">
 
 <head>
@@ -13,44 +14,7 @@
 </head>
 
 <body>
-    <div class="container">
-        <table class="table table-borderless billing-icons">
-            <tr>
-                <td>
-                    <i class="bi bi-cart4"></i>
-                    <p>New Sales</p>
-                </td>
-                <td>
-                    <i class="bi bi-card-checklist"></i>
-                    <p>Lists Sales</p>
-                </td>
-                <td>
-                    <i class="bi bi-journal-text"></i>
-                    <p>Sales Report</p>
-                </td>
-                <td>
-                    <i class="bi bi-database-fill"></i>
-                    <p>Products</p>
-                </td>
-                <td>
-                    <i class="bi bi-currency-rupee"></i>
-                    <p>Today's Sales</p>
-                </td>
-                <td>
-                    <i class="bi bi-gear-fill"></i>
-                    <p>Settings</p>
-                </td>
-                <td>
-                    <i class="bi bi-x-circle-fill"></i>
-                    <p>Account Close</p>
-                </td>
-                <td>
-                    <i class="bi bi-box-arrow-right"></i>
-                    <p>Logout</p>
-                </td>
-            </tr>
-        </table>
-    </div>
+    @yield('content')
     <div class="container-fluid bg-light m-0">
         <p style="font-size: 12px; color: red;" class="text-center">Welcome Administrator</p>
         <h5 class="text-center">Billing Area</h5>
@@ -62,13 +26,15 @@
                 <select name="" id="checkbox" style="width: 300px; height: 50px;">
                     <option value=""></option>
                 </select>
-                <input type="text" name="" id="" style="width: 50px; height: 40px;">
-                <button class="btn btn-primary">Add</button>
+                <input type="number" name="quantity" id="quantity" style="width: 50px; height: 40px;">
+                <input type="hidden" name="product_price" id="product_price">
+                <input type="hidden" name="product_barcode" id="product_barcode">
+                <button class="btn btn-primary" onclick="addProduct()">Add</button>
                 <div class="d-flex me-0 justify-content-end mb-1 total-billing-div">
                     <p>Total</p>
-                    <h3><i class="bi bi-currency-rupee"></i>200</h3>
+                    <h3 id="total_rupee"><i class="bi bi-currency-rupee"></i>0.00</h3>
                 </div>
-                <table class="table table-bordered billing-table-main">
+                <table class="table table-bordered billing-table-main" id="billing_table">
                     <thead>
                         <th>Product Name</th>
                         <th>Barcode</th>
@@ -78,18 +44,12 @@
                         <th>Action</th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1Kg Freshcream</td>
-                            <td>1098171</td>
-                            <td>800</td>
-                            <td>1</td>
-                            <td>800</td>
-                            <td><button class="btn btn-warning">Remove</button></td>
-                        </tr>
+
                     </tbody>
                 </table>
                 <button class="form-control bg-warning text-center py-1 text-white">Hold Order</button>
-                <button class="form-control bg-dark text-center py-1 text-white">Continue to Payment</button>
+                <button class="form-control bg-dark text-center py-1 text-white" onclick="payment()">Continue to
+                    Payment</button>
             </div>
             <div class="col-md-4 bg-light">
                 <table class="table table-borderless table-stock">
@@ -114,23 +74,118 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#checkbox').select2();
-            $.ajax({
-                url: "your_api_endpoint.php",
-                method: "POST",
-                dataType: "json", 
-                success: function(data) {
-                   
-                    console.log(data);
+            $('#checkbox').select2({
+                placeholder: "Search a product",
+                allowClear: true,
+                ajax: {
+                    url: '/products-search',
+                    type: 'POST', // changed to POST
+                    dataType: 'json',
+                    delay: 250,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF token
+                    },
+                    data: function(params) {
+                        return {
+                            search: params.term // search term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(item) {
+                                return {
+                                    id: item.product_name,
+                                    text: item.product_name,
+                                    quantity: item.quantity,
+                                    product_price: item.product_price,
+                                    selling_price: item.selling_price,
+                                    product_code: item.product_code
+                                };
+                            })
+                        };
+                    },
+                    cache: true
                 },
-                error: function(XHR, textStatus, errorThrown) {
-                    console.error("AJAX error:", textStatus, errorThrown);
-                },
-                complete: function() {
-                    console.log("Request complete.");
-                }
+                minimumInputLength: 1
+            });
+
+            $('#checkbox').on('select2:select', function(e) {
+                var data = e.params.data;
+                $('#product_price').val(data.product_price);
+                $('#quantity').val(data.quantity);
+                $('#selling_price').val(data.selling_price);
+                $('#product_barcode').val(data.product_code);
+            });
+
+            $('#checkbox').on('select2:clear', function() {
+                $('#quantity').val('');
+                $('#product_price').val('');
+                $('#selling_price').val('');
+                $('#product_barcode').val('');
             });
         });
+
+
+        function addProduct() {
+            var productName = $('#checkbox').val();
+            var quantity = $('#quantity').val();
+            var price = $('#product_price').val();
+            var barcode = $('#product_barcode').val();
+
+            if (!productName || !quantity || !price) {
+                alert("Please select a product and enter quantity.");
+                return;
+            }
+            var total_price = Number(quantity) * Number(price);
+            $('#total_rupee').html(`<i class="bi bi-currency-rupee"></i> ${total_price}`);
+
+            var newRow = `<tr>
+            <td>${productName}</td>
+            <td>${barcode}</td>
+            <td><i class="bi bi-currency-rupee"></i> ${price}</td>
+            <td>${quantity}</td>
+            <td><i class="bi bi-currency-rupee"></i> ${total_price}</td>
+            <td><button class="btn btn-warning btn-sm remove-row">Remove</button></td>
+            </tr>`;
+            $('#billing_table tbody').append(newRow);
+            $('.remove-row').last().click(function() {
+                $(this).closest('tr').remove();
+                updateTotal();
+            });
+            $('#checkbox').val(null).trigger('change');
+            $('#quantity').val('');
+            $('#product_price').val('');
+            $('#product_barcode').val('');
+        }
+
+        function updateTotal() {
+            var total = 0;
+            $('#billing_table tbody tr').each(function() {
+                let amount = $(this).find('td').eq(4).text().replace('₹', '').trim();
+                total += Number(amount);
+            });
+            $('#total_rupee').html(`<i class="bi bi-currency-rupee"></i> ${total}`);
+        }
+
+        function payment() {
+            var products = [];
+            $('#billing_table tbody tr').each(function() {
+                alert('Success')
+                var row = $(this);
+                var product = {
+                    product_name: row.find('td').eq(0).text(),
+                    barcode: row.find('td').eq(1).text(),
+                    unit_price: Number(row.find('td').eq(2).text().replace('₹', '').trim()),
+                    quantity: Number(row.find('td').eq(3).text()),
+                    amount: Number(row.find('td').eq(4).text().replace('₹', '').trim())
+                };
+                products.push(product);
+            });
+
+            // Print JSON format to console
+            console.log(JSON.stringify(products, null, 4));
+            $('#billing_table tbody').empty();
+        }
     </script>
 </body>
 

@@ -1,3 +1,4 @@
+@include('layouts.header')
 <html lang="en">
 
 <head>
@@ -12,6 +13,7 @@
 </head>
 
 <body>
+    @yield('content')
     <div class="container">
         <div class="row text-center d-flex align-items-center justify-content-center">
             <div class="col-md-6">

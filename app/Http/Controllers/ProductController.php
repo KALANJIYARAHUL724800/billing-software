@@ -23,7 +23,7 @@ class ProductController extends Controller
         ]);
         $res = $this->productService->insertProduct($validate);
         if (!empty($res)) {
-            return redirect()->back()->with('success', 'Product successfully inserted');
+            return redirect('/products');
         } else {
             return redirect()->back()->with('error', 'Failed to insert product');
         }
@@ -31,6 +31,12 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
-        return $request->all();
+        $res = $this->productService->findProduct($request->input('search'));
+        return $res;
+    }
+    public function showAllProducts()
+    {
+        $allProducts = $this->productService->showAllProducts();
+        return view('products',compact('allProducts'));
     }
 }
