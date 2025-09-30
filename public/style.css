@@ -1,0 +1,78 @@
+.login-body {
+    background-color: rgb(83, 83, 255);
+}
+.login-form{
+    margin-top: 10%;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+}
+.icon{
+    font-size:30px;
+}
+.login-button{
+    position: relative;
+    left: 75%;
+}
+
+.billing-icons i{
+    font-size: 50px;
+    color: rgb(83, 83, 255);
+    padding: 5px;
+}
+.billing-icons p{
+    color: rgb(243, 81, 108);
+    font-weight: bold;
+}
+.billing-icons i:hover{
+    display: inline-block;
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 1s;
+}
+
+.total-billing-div{
+    position: relative;
+    display: inline-block !important;
+    background-color: rgb(253, 28, 122);
+    color: white;
+    padding: 2px;
+    left: 40%;
+    border-radius: 10px;
+}
+
+.billing-table-main th{
+    color: red;
+}
+
+.billing-table-main td{
+    color: green;
+    font-weight: bold;
+}
+
+.table-stock th{
+    color: red;
+    padding: 0;
+    margin: 0;
+}
+
+.table-stock td{
+    color: green;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+.product-table th{
+    background-color: blue;
+    color: white;
+    margin: 0;
+}
+.prodcut-table-form input.form-control {
+    background-color: pink !important;
+}
+
+table.listsales-table th{
+    background-color: rgb(66, 66, 184);
+    color: white;
+}
