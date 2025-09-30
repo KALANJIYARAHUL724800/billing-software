@@ -3,6 +3,7 @@
 use App\Http\Controllers\AvailableController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +27,7 @@ Route::middleware(['admin'])->group(function () {
     })->name('billing');
 
     Route::get('/products', [ProductController::class, 'showAllProducts'])->name('products.page');
+    Route::get('/edit-products/{id}', [ProductController::class, 'editProducts'])->name('products.edit');
     Route::post('/addproducts', [ProductController::class, 'addProducts'])->name('products.insert');
 
     Route::get('/productform', function () {
@@ -34,9 +36,9 @@ Route::middleware(['admin'])->group(function () {
 
     Route::post('/products-search', [ProductController::class, 'searchProduct']);
 
-    Route::get('/settings', function () {
-        return view('settings');
-    })->name('settings.page');
+    Route::get('/settings', [SettingController::class, 'showRecord'])->name('settings.page');
+
+    Route::post('/settings', [SettingController::class, 'insertSetting'])->name('settings.update');
 
     Route::get('/billscreen', function () {
         return view('billscreen');

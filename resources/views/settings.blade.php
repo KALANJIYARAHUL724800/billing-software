@@ -17,31 +17,36 @@
     <div class="container">
         <div class="row text-center d-flex align-items-center justify-content-center">
             <div class="col-md-6">
-                <form action="">
+                <form action="{{ route('settings.update') }}" method="POST">
+                    @csrf
                     <h4>Settings</h4>
                     <table class="table">
                         <tr>
                             <th>Company Name</th>
-                            <td><input type="text" name="" id="" class="form-control"></td>
+                            <td><input type="text" name="company_name" id="" class="form-control"
+                                    value="{{ $record['company_name'] }}"></td>
                         </tr>
                         <tr>
                             <th>Address</th>
                             <td>
-                                <textarea type="" name="" id="" class="form-control"></textarea>
+                                <textarea type="text" name="address" id="" class="form-control">{{ $record['address'] }}</textarea>
                             </td>
                         </tr>
                         <tr>
                             <th>Phone</th>
-                            <td><input type="text" name="" id="" class="form-control"></td>
+                            <td><input type="text" name="phone" id="" class="form-control"
+                                    value="{{ $record['phone'] }}"></td>
 
                         </tr>
                         <tr>
                             <th>Receipt Message</th>
-                            <td><input type="text" name="" id="" class="form-control"></td>
+                            <td><input type="text" name="message" id="" class="form-control"
+                                    value="{{ $record['message'] }}"></td>
                         </tr>
                         <tr>
                             <th>GST %</th>
-                            <td><input type="text" name="" id="" class="form-control"></td>
+                            <td><input type="text" name="gst" id="" class="form-control"
+                                    value="{{ $record['gst'] }}"></td>
                         </tr>
                     </table>
                     <button class="btn btn-primary">Apply Settings</button>

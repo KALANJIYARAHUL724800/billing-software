@@ -18,11 +18,6 @@ class ProductService
     }
     public function findProduct($data)
     {
-        // return Product::where('product_name', 'LIKE', $data.'%')
-        //     ->get(['product_code', 'product_name', 'product_price', 'selling_price', 'quantity']);
-        //return Product::where('active_flag',1)->get(['product_code','product_name','product_price','selling_price','quantity']);
-        // get search term from POST
-
         if (!empty($data)) {
             return Product::where('product_name', 'LIKE', $data . '%')
                 ->get(['product_code', 'product_name', 'product_price', 'selling_price', 'quantity']);
@@ -33,5 +28,9 @@ class ProductService
     public function showAllProducts()
     {
         return Product::where('active_flag',1)->get(['id','product_code','product_name','product_price','selling_price','quantity']);
+    }
+     public function editProducts($id)
+    {
+        return Product::where('id',$id)->get(['id','product_code','product_name','product_price','selling_price','quantity']);
     }
 }

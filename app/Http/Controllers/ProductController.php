@@ -39,4 +39,10 @@ class ProductController extends Controller
         $allProducts = $this->productService->showAllProducts();
         return view('products',compact('allProducts'));
     }
+    public function editProducts($id)
+    {
+        dd($id);
+        $data = $this->productService->editProducts($id);
+        return view('edit_products',compact('data'));
+    }
 }

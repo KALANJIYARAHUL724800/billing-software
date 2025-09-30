@@ -47,7 +47,10 @@
                         <td>{{ $products['product_price'] }}</td>
                         <td>{{ $products['quantity'] }}</td>
                         <td>
-                            <button class="btn btn-warning">Edit</button>
+                            <button class="btn btn-warning"
+                                onclick="window.location.href='{{ url('edit-products/' . $products['id']) }}'">
+                                Edit
+                            </button>
                             <button class="btn btn-danger">Delete</button>
                         </td>
                     </tr>
